@@ -1,12 +1,10 @@
 import Foundation
 
 func loadData(day: Int) -> String {
-    guard let session = getenv("SESSION") else {
-        fatalError("Missing session env var")
-    }
+    let session = (try! String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".config/aoc2020session"))).trimmingCharacters(in: .whitespacesAndNewlines)
 
     var request = URLRequest(url: URL(string: "https://adventofcode.com/2020/day/\(day)/input")!)
-    request.setValue("session=\(String(cString: session))", forHTTPHeaderField: "Cookie")
+    request.setValue("session=\(session)", forHTTPHeaderField: "Cookie")
 
     var result: String? = nil
 
