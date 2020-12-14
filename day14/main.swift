@@ -1,56 +1,68 @@
 import Foundation
-let scanner = Scanner(string: loadData(day: 14))
+let input = loadData(day: 14)
+
+class Problem {
+    let scanner: Scanner
+
+    /// Each bit where the mask is "1" is set here
+    var maskBits: UInt64 = 0
+
+    /// Each bit where the mask is "X" is set here
+    var maskUsed: UInt64 = 0
+    var mem: [UInt64:UInt64] = [:]
+
+    var writeMem: (Problem, UInt64, UInt64) -> Void
+
+    init(_ input: String, writeMem: @escaping (Problem, UInt64, UInt64) -> Void) {
+        scanner = Scanner(string: input)
+        self.writeMem = writeMem
+    }
+
+    func run() {
+        while !scanner.isAtEnd {
+            if scanner.string("mask = "), let mask = scanner.scanCharacters(from: Self.maskSet) {
+                readMask(mask)
+            } else if scanner.string("mem["), let addr = scanner.scanUInt64(), scanner.string("] = "), let value = scanner.scanUInt64() {
+                writeMem(self, addr, value)
+            } else {
+                assertionFailure("Invalid input")
+            }
+        }
 
 
-var maskBits: UInt64 = 0
-var maskUsed: UInt64 = 0
+        print("sum", mem.values.reduce(0, +))
+    }
 
+    private func readMask(_ mask: String) {
+        assert(mask.count == 36)
 
-var mem: [UInt64:UInt64] = [:]
+        maskBits = 0
+        maskUsed = 0
 
+        for char in mask {
+            maskBits <<= 1
+            maskUsed <<= 1
 
-func readMask(_ mask: String) {
-    assert(mask.count == 36)
-
-    maskBits = 0
-    maskUsed = 0
-
-    for char in mask {
-        maskBits <<= 1
-        maskUsed <<= 1
-
-        switch char {
-        case "1": maskBits |= 1
-        case "0": break
-        case "X": maskUsed |= 1
-        default: assertionFailure("Invalid character in mask")
+            switch char {
+            case "1": maskBits |= 1
+            case "0": break
+            case "X": maskUsed |= 1
+            default: assertionFailure("Invalid character in mask")
+            }
         }
     }
+
+    static private let maskSet = CharacterSet(charactersIn: "01X")
 }
 
-func applyMask(_ value: UInt64) -> UInt64 {
-    (value & maskUsed) | maskBits
+
+
+let part1 = Problem(input) { problem, addr, value in
+    problem.mem[addr] = (value & problem.maskUsed) | problem.maskBits
 }
-
-let maskSet = CharacterSet(charactersIn: "01X")
-
-/*
-while !scanner.isAtEnd {
-    if scanner.string("mask = "), let mask = scanner.scanCharacters(from: maskSet) {
-        readMask(mask)
-    } else if scanner.string("mem["), let addr = scanner.scanInt(), scanner.string("] = "), let value = scanner.scanUInt64() {
-        mem[addr] = applyMask(value)
-    } else {
-        assertionFailure("Invalid input")
-    }
-}
- */
+part1.run()
 
 
-func printPadded(_ val: UInt64) {
-    let s = String(val, radix: 2)
-    print(String(repeating: " ", count: 36 - s.count) + s)
-}
 
 func possibleValues(_ mask: UInt64) -> [UInt64] {
     var values: [UInt64] = []
@@ -71,22 +83,11 @@ func possibleValues(_ mask: UInt64) -> [UInt64] {
     return values
 }
 
-func writeMem(_ addr: UInt64, _ value: UInt64) {
-    for i in possibleValues(maskUsed) {
-        let effective = i | ((addr | maskBits) & ~maskUsed)
-        mem[effective] = value
+let part2 = Problem(input) { problem, addr, value in
+    for i in possibleValues(problem.maskUsed) {
+        let effective = i | ((addr | problem.maskBits) & ~problem.maskUsed)
+        problem.mem[effective] = value
     }
 }
 
-while !scanner.isAtEnd {
-    if scanner.string("mask = "), let mask = scanner.scanCharacters(from: maskSet) {
-        readMask(mask)
-    } else if scanner.string("mem["), let addr = scanner.scanUInt64(), scanner.string("] = "), let value = scanner.scanUInt64() {
-        writeMem(addr, value)
-    } else {
-        assertionFailure("Invalid input")
-    }
-}
-
-
-print("sum", mem.values.reduce(0, +))
+part2.run()
