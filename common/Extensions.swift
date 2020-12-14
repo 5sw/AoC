@@ -24,3 +24,10 @@ extension String {
         return result
     }
 }
+
+extension Sequence {
+    func print(_ prefix: String = "") -> Self {
+        Swift.print(prefix, Array(self))
+        return self
+    }
+}
