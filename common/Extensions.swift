@@ -31,3 +31,9 @@ extension Sequence {
         return self
     }
 }
+
+extension Collection where Element: Collection {
+    func flatten() -> [Element.Element] {
+        flatMap { $0 }
+    }
+}
