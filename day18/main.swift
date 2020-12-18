@@ -24,14 +24,17 @@ extension Scanner {
     }
 
     func expression() -> Int? {
+        guard var result = addition() else { return nil }
+        while string("*"), let second = addition() {
+            result *= second
+        }
+        return result
+    }
+
+    func addition() -> Int? {
         guard var result = primary() else { return nil }
-        while let op = self.op() {
-            guard let second = primary() else { fatalError() }
-            switch op {
-            case "+": result += second
-            case "*": result *= second
-            default: fatalError()
-            }
+        while string("+"), let second = primary() {
+            result += second
         }
         return result
     }
