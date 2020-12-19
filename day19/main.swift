@@ -4,7 +4,7 @@ let input = loadData(day: 19)
 let scanner = Scanner(string: input)
 scanner.charactersToBeSkipped = .whitespaces
 
-enum Rule {
+enum Rule: Equatable {
     case character(Character)
     indirect case sequence(Rule, Rule)
     indirect case alternative(Rule, Rule)
@@ -75,7 +75,7 @@ extension Scanner {
 let rules = scanner.parseRuleSet()
 
 extension Rule {
-    func matches(rules: RuleSet, _ s: Substring) -> Substring? {
+    func matches(rules: RuleSet, index: Int, _ s: Substring) -> Substring? {
         switch self {
         case .character(let ch):
             if s.first == ch {
@@ -85,30 +85,38 @@ extension Rule {
             return nil
 
         case let .sequence(first, second):
-            if let firstMatch = first.matches(rules: rules, s), let secondMatch = second.matches(rules: rules, firstMatch) {
+            if let firstMatch = first.matches(rules: rules, index: index, s), let secondMatch = second.matches(rules: rules, index: index, firstMatch) {
                 return secondMatch
             }
 
             return nil
 
+        case .alternative(let a, .sequence(let b, .reference(index))) where a == b:
+            var rest = s
+            while let match = a.matches(rules: rules, index: index, rest) {
+                rest = match
+            }
+            guard rest != s else { return nil }
+            return rest
+            
         case let .alternative(first, second):
-            if let firstMatch = first.matches(rules: rules, s) {
+            if let firstMatch = first.matches(rules: rules, index: index, s) {
                 return firstMatch
             }
 
-            if let secondMatch = second.matches(rules: rules, s) {
+            if let secondMatch = second.matches(rules: rules, index: index, s) {
                 return secondMatch
             }
 
             return nil
 
         case .reference(let index):
-            return rules[index]!.matches(rules: rules, s)
+            return rules[index]!.matches(rules: rules, index: index, s)
         }
     }
 
-    func matches(rules: RuleSet, _ s: String) -> Bool {
-        if let result = matches(rules: rules, s[...]), result.isEmpty {
+    func matches(rules: RuleSet, index: Int, _ s: String) -> Bool {
+        if let result = matches(rules: rules, index: index, s[...]), result.isEmpty {
             return true
         }
 
@@ -138,5 +146,19 @@ extension Scanner {
 
 let messages = scanner.readLines()
 
-print("part 1", messages.lazy.filter { rules[0]!.matches(rules: rules, $0) }.count)
+print("part 1", messages.lazy.filter { rules[0]!.matches(rules: rules,index: 0, $0) }.count)
 
+let changedRules = """
+8: 42 | 42 8
+11: 42 31 | 42 11 31
+
+
+"""
+
+let changeScanner = Scanner(string: changedRules)
+changeScanner.charactersToBeSkipped = .whitespaces
+let ruleUpdates = changeScanner.parseRuleSet()
+
+let newRules = rules.merging(ruleUpdates) { $1 }
+
+print("part 2", messages.lazy.filter { rules[0]!.matches(rules: newRules, index: 0, $0) }.count)
