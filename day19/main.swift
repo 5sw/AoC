@@ -75,7 +75,7 @@ extension Scanner {
 let rules = scanner.parseRuleSet()
 
 extension Rule {
-    func matches(rules: RuleSet, index: Int, _ s: Substring) -> Set<Substring> {
+    func matches(rules: RuleSet, _ s: Substring) -> Set<Substring> {
         switch self {
         case .character(let ch):
             if s.first == ch {
@@ -85,28 +85,22 @@ extension Rule {
             return []
 
         case let .sequence(first, second):
-            let firstMatches = first.matches(rules: rules, index: index, s)
-            let result = Set(firstMatches.flatMap { x -> Set<Substring> in
-                let part = second.matches(rules: rules, index: index, x)
-                return part
-            })
-
-            return result
+            let firstMatches = first.matches(rules: rules, s)
+            return Set(firstMatches.flatMap { second.matches(rules: rules, $0) })
 
         case let .alternative(first, second):
-            let firstMatch = first.matches(rules: rules, index: index, s)
-            let secondMatch = second.matches(rules: rules, index: index, s)
+            let firstMatch = first.matches(rules: rules, s)
+            let secondMatch = second.matches(rules: rules, s)
 
-            let result = firstMatch.union(secondMatch)
-            return result
+            return firstMatch.union(secondMatch)
 
         case .reference(let index):
-            return rules[index]!.matches(rules: rules, index: index, s)
+            return rules[index]!.matches(rules: rules, s)
         }
     }
 
-    func matches(rules: RuleSet, index: Int, _ s: String) -> Bool {
-        let result = matches(rules: rules, index: index, s[...])
+    func matches(rules: RuleSet, _ s: String) -> Bool {
+        let result = matches(rules: rules, s[...])
         return result.contains("")
     }
 }
@@ -135,7 +129,7 @@ let messages = scanner.readLines()
 
 let start = Rule.reference(0)
 
-print("part 1:", messages.lazy.filter { start.matches(rules: rules,index: 0, $0) }.count)
+print("part 1:", messages.lazy.filter { start.matches(rules: rules, $0) }.count)
 
 let changedRules = """
 8: 42 | 42 8
@@ -150,4 +144,4 @@ let ruleUpdates = changeScanner.parseRuleSet()
 
 let newRules = rules.merging(ruleUpdates) { $1 }
 
-print("part 2:", messages.filter { start.matches(rules: newRules, index: 0, $0) }.count)
+print("part 2:", messages.filter { start.matches(rules: newRules, $0) }.count)
