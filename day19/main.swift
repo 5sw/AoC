@@ -75,40 +75,30 @@ extension Scanner {
 let rules = scanner.parseRuleSet()
 
 extension Rule {
-    func matches(rules: RuleSet, index: Int, _ s: Substring) -> Substring? {
+    func matches(rules: RuleSet, index: Int, _ s: Substring) -> Set<Substring> {
         switch self {
         case .character(let ch):
             if s.first == ch {
-                return s.dropFirst()
+                return [s.dropFirst()]
             }
 
-            return nil
+            return []
 
         case let .sequence(first, second):
-            if let firstMatch = first.matches(rules: rules, index: index, s), let secondMatch = second.matches(rules: rules, index: index, firstMatch) {
-                return secondMatch
-            }
+            let firstMatches = first.matches(rules: rules, index: index, s)
+            let result = Set(firstMatches.flatMap { x -> Set<Substring> in
+                let part = second.matches(rules: rules, index: index, x)
+                return part
+            })
 
-            return nil
+            return result
 
-        case .alternative(let a, .sequence(let b, .reference(index))) where a == b:
-            var rest = s
-            while let match = a.matches(rules: rules, index: index, rest) {
-                rest = match
-            }
-            guard rest != s else { return nil }
-            return rest
-            
         case let .alternative(first, second):
-            if let firstMatch = first.matches(rules: rules, index: index, s) {
-                return firstMatch
-            }
+            let firstMatch = first.matches(rules: rules, index: index, s)
+            let secondMatch = second.matches(rules: rules, index: index, s)
 
-            if let secondMatch = second.matches(rules: rules, index: index, s) {
-                return secondMatch
-            }
-
-            return nil
+            let result = firstMatch.union(secondMatch)
+            return result
 
         case .reference(let index):
             return rules[index]!.matches(rules: rules, index: index, s)
@@ -116,11 +106,8 @@ extension Rule {
     }
 
     func matches(rules: RuleSet, index: Int, _ s: String) -> Bool {
-        if let result = matches(rules: rules, index: index, s[...]), result.isEmpty {
-            return true
-        }
-
-        return false
+        let result = matches(rules: rules, index: index, s[...])
+        return result.contains("")
     }
 }
 
@@ -146,7 +133,9 @@ extension Scanner {
 
 let messages = scanner.readLines()
 
-print("part 1", messages.lazy.filter { rules[0]!.matches(rules: rules,index: 0, $0) }.count)
+let start = Rule.reference(0)
+
+print("part 1:", messages.lazy.filter { start.matches(rules: rules,index: 0, $0) }.count)
 
 let changedRules = """
 8: 42 | 42 8
@@ -161,4 +150,4 @@ let ruleUpdates = changeScanner.parseRuleSet()
 
 let newRules = rules.merging(ruleUpdates) { $1 }
 
-print("part 2", messages.lazy.filter { rules[0]!.matches(rules: newRules, index: 0, $0) }.count)
+print("part 2:", messages.filter { start.matches(rules: newRules, index: 0, $0) }.count)
