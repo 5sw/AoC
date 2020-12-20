@@ -166,27 +166,15 @@ extension Board.Cell {
         return result
     }
 }
-
+let start = Date()
 guard let solution = Board(tiles: tilesById.keys).solve() else { fatalError() }
+let end = Date()
+
+print("Took", end.timeIntervalSince(start))
 
 let e = solution.size - 1
-let ts = tilesById.first!.value.size
 
-for y in 0...e {
-    for l in 0..<ts {
-        for x in 0...e {
-            let tile = solution[x, y].chosen!
-            for c in 0..<ts {
-                print(tile[c,l] ? "#" : ".", terminator: "")
-            }
-            print(terminator: " ")
-        }
-        print()
-    }
-    print()
-}
-
-print()
+print(solution[0,0].chosen!.id)
 
 print(
     solution[0,0].chosen!.id *
@@ -194,3 +182,91 @@ print(
     solution[0,e].chosen!.id *
     solution[e,e].chosen!.id
 )
+
+extension Board {
+    struct CompleteImage {
+        let board: Board
+        var flipped = false
+        var rotation = TileReference.Rotation.rotate0
+    }
+
+    var completeImage: CompleteImage {
+        CompleteImage(board: self)
+    }
+
+    func completeImage(flipped: Bool, rotation: TileReference.Rotation) -> CompleteImage {
+        CompleteImage(board: self, flipped: flipped, rotation: rotation)
+    }
+}
+
+
+extension Board.CompleteImage {
+    var size: Int {
+        board.size * (board.cells[0].chosen!.end - 1)
+    }
+
+    subscript(x: Int, y: Int) -> Bool {
+        get {
+            var coord = flipped ? (x: size - 1 - x, y: y) : (x: x, y: y)
+            coord = rotation.get(x: coord.x, y: coord.y, size: size)
+
+            let tileSize = board.cells[0].chosen!.end - 1
+            let (tileX, offsetX) = coord.x.quotientAndRemainder(dividingBy: tileSize)
+            let (tileY, offsetY) = coord.y.quotientAndRemainder(dividingBy: tileSize)
+            let tile = board[tileX, tileY].chosen!
+            return tile[offsetX + 1, offsetY + 1]
+        }
+    }
+}
+
+for y in 0..<solution.completeImage.size {
+    for x in 0..<solution.completeImage.size {
+        print(solution.completeImage[x, y] ? "#" : ".", terminator: "")
+    }
+    print()
+}
+
+
+extension Board.CompleteImage {
+    func seaMonster(x: Int, y: Int) -> Bool {
+        return self[x + 18, y] &&
+            self[x + 0, y + 1] && self[x + 5, y + 1] && self[x + 6, y + 1] && self[x + 11, y + 1] && self[x + 12, y + 1] && self[x + 17, y + 1] && self[x + 18, y + 1] && self[x + 19, y + 1]  &&
+            self[x + 1, y + 2] && self[x + 4, y + 2] && self[x + 7, y + 2] && self[x + 10, y + 2] && self[x + 13, y + 2] && self[x + 16, y + 2]
+    }
+
+    func countMonsters() -> Int {
+        var count = 0
+        for y in 0..<size - 2 {
+            for x in 0..<size - 19 {
+                if seaMonster(x: x, y: y) {
+                    count += 1
+                }
+            }
+        }
+        return count
+    }
+
+    func countOnes() -> Int {
+        var count = 0
+        for y in 0..<size {
+            for x in 0..<size {
+                count += self[x, y] ? 1 : 0
+            }
+        }
+        return count
+    }
+}
+
+let ones = solution.completeImage.countOnes()
+outer: for flipped in [true, false] {
+    for rotation in TileReference.Rotation.allCases {
+        let monsters = solution.completeImage(flipped: flipped, rotation: rotation).countMonsters()
+        if monsters > 0 {
+            let monsterTiles = monsters * 15
+            let result = ones - monsterTiles
+            print(result)
+            break outer
+        }
+    }
+}
+
