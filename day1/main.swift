@@ -1,6 +1,6 @@
 import Foundation
 
-let input = Scanner(string: loadData(day: 1)).integers()!
+let input = Scanner(string: loadData(day: 1)).integers()
 
 for i in 0..<input.count {
     for j in i..<input.count   {

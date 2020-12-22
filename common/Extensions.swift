@@ -6,10 +6,9 @@ extension Scanner {
         return scanString(string) != nil
     }
 
-    func integers() -> [Int]? {
+    func integers() -> [Int] {
         var numbers: [Int] = []
-        while !isAtEnd {
-            guard let num = scanInt() else { return nil }
+        while let num = scanInt() {
             numbers.append(num)
         }
         return numbers

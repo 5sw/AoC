@@ -3,7 +3,7 @@ import Foundation
 let input = loadData(day: 10)
 let scanner = Scanner(string: input)
 
-var adapters = scanner.integers()!.sorted { $0 > $1 }
+var adapters = scanner.integers().sorted { $0 > $1 }
 adapters.append(0)
 
 

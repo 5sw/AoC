@@ -3,7 +3,7 @@ import Foundation
 let input = loadData(day: 9)
 let scanner = Scanner(string: input)
 
-let numbers = scanner.integers()!
+let numbers = scanner.integers()
 
 var weakness: Int? = nil
 outer: for i in 25..<numbers.count {
