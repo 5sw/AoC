@@ -1,36 +1,97 @@
-var stack = [9, 5, 2, 3, 1, 6, 4, 8, 7]
+class Node {
+    var next: Node!
+    var value: Int
 
-extension Array {
-    mutating func rotateLeft(mid: Index) {
-        let slice = self[0..<mid]
-        removeSubrange(0..<mid)
-        append(contentsOf: slice)
+    init(value: Int, next: Node? = nil) {
+        self.value = value
+        self.next = next
     }
+
+    static func make(_ values: [Int]) -> Node {
+        precondition(!values.isEmpty)
+
+        let first = Node(value: values[0])
+        first.next = first
+
+        var current = first
+        for value in values.dropFirst() {
+            let new = Node(value: value, next: first)
+            current.next = new
+            current = new
+        }
+
+        return first
+    }
+
+    func find(value: Int) -> Node? {
+        var current = self
+        repeat {
+            if current.value == value {
+                return current
+            }
+            current = current.next
+        } while current !== self
+        return nil
+    }
+}
+
+
+let input = [9, 5, 2, 3, 1, 6, 4, 8, 7]
+let max = input.max()!
+
+let node = Node.make(input)
+var selected = node
+
+func rangeContains(value: Int, start: Node,  end: Node) -> Bool {
+    var current = start
+    while current !== end.next {
+        if current.value == value {
+            return true
+        }
+        current = current.next
+    }
+    return false
 }
 
 func round() {
-    let picked = stack[1 ... 3]
-    stack.removeSubrange(1 ...  3)
+    let firstPick: Node = selected.next
+    let lastPick: Node = firstPick.next.next
 
-    var destination = stack[0]
+    selected.next = lastPick.next
+
+    var destination = selected.value
     repeat {
         destination -= 1
         if destination < 1 {
-            destination = 9
+            destination = max
         }
-    } while picked.contains(destination)
+    } while rangeContains(value: destination, start: firstPick, end: lastPick)
 
-    let destinationIndex = stack.firstIndex(of: destination)! + 1
-    stack.insert(contentsOf: picked, at: destinationIndex)
+    let toInsert = lastPick.next.find(value: destination)!
+    lastPick.next = toInsert.next
+    toInsert.next = firstPick
 
-    stack.rotateLeft(mid: 1)
+    selected = selected.next
 }
 
 func printStack() {
-    for (offset, value) in stack.enumerated() {
-        print(offset == 0 ? "(\(value))" : "\(value)", terminator: " ")
+    var current = node
+    repeat {
+        print(current === selected ? "(\(current.value))" : "\(current.value)", terminator: " ")
+        current = current.next
+    } while current !== node
+    print()
+}
+
+func showSolution() {
+    let start = node.find(value: 1)!
+    var one: Node = start.next
+    while one !== start {
+        print(one.value, terminator: "")
+        one = one.next
     }
     print()
+
 }
 
 for i in 0..<100 {
@@ -38,9 +99,7 @@ for i in 0..<100 {
     printStack()
     round()
 }
+
 print("Final: ", terminator: "")
 printStack()
-
-let oneIndex = stack.firstIndex(of: 1)!
-stack.rotateLeft(mid: (oneIndex + 1) % stack.count)
-print(stack.dropLast().map {"\($0)"}.joined())
+showSolution()
