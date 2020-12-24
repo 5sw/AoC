@@ -1,4 +1,6 @@
-class Node {
+var nodesByValue: [Node?] = Array(repeating: nil, count: 1000001)
+
+final class Node {
     var next: Node!
     var value: Int
 
@@ -11,11 +13,20 @@ class Node {
         precondition(!values.isEmpty)
 
         let first = Node(value: values[0])
+        nodesByValue[values[0]] = first
         first.next = first
 
         var current = first
         for value in values.dropFirst() {
             let new = Node(value: value, next: first)
+            nodesByValue[value] = new
+            current.next = new
+            current = new
+        }
+
+        for value in 10...1000000 {
+            let new = Node(value: value, next: first)
+            nodesByValue[value] = new
             current.next = new
             current = new
         }
@@ -24,20 +35,13 @@ class Node {
     }
 
     func find(value: Int) -> Node? {
-        var current = self
-        repeat {
-            if current.value == value {
-                return current
-            }
-            current = current.next
-        } while current !== self
-        return nil
+        return nodesByValue[value]
     }
 }
 
-
 let input = [9, 5, 2, 3, 1, 6, 4, 8, 7]
-let max = input.max()!
+let max = 1000000
+//let max = input.max()!
 
 let node = Node.make(input)
 var selected = node
@@ -94,12 +98,15 @@ func showSolution() {
 
 }
 
-for i in 0..<100 {
-    print("\(i + 1)) ", terminator: "")
-    printStack()
+for i in 0..<10_000_000 {
+//    print("\(i + 1)) ", terminator: "")
+//    printStack()
     round()
 }
 
-print("Final: ", terminator: "")
-printStack()
-showSolution()
+//print("Final: ", terminator: "")
+//printStack()
+//showSolution()
+
+let one = node.find(value: 1)!
+print(one.next.value * one.next.next.value)
