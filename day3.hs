@@ -1034,19 +1034,17 @@ bitsAt input pos  = bits $ foldl (count pos) (0, 0) input
 
 toNumber :: Foldable t => t Bool -> Int
 toNumber = foldl addBit 0
-    where addBit a b = a `shiftL` 1 + (if b then 1 else 0)
+    where addBit a b = a `shiftL` 1 .|. (if b then 1 else 0)
+
+combineList [] = ([], [])
+combineList ((a, b) : rest) = (a : arest, b: brest)
+    where (arest, brest) = combineList rest
 
 {-
 
->>> import Data.Bits
->>> 1 `shiftL` 1
-2
-
->>>  (toNumber $ snd <$> (bitsAt input) <$> [0..11]) *  (toNumber $ fst <$> (bitsAt input) <$> [0..11])
+>>> (a, b) = ( combineList $ (bitsAt input) <$> [0..(length $ head input) - 1])
+>>> toNumber a * toNumber b
 2003336
-
->>> toNumber [False, True, True, False]
-6
 
 -}
 
@@ -1057,23 +1055,23 @@ filterUntilLast pred list = filterUntilLastAt 0 pred list
             | otherwise  = filterUntilLastAt (pos + 1) pred (filter (pred pos list) list)
 
 
-oxyFilter pos list item =
+oxyFilter :: Int -> [[Char]] -> [Char] -> Bool
+oxyFilter = makeFilter (<=)
+
+co2Filter :: Int -> [[Char]] -> [Char] -> Bool
+co2Filter = makeFilter (>)
+
+makeFilter predicate pos list item =
     item !! pos == keep
-    where 
+    where
         (zero, one) = foldl (count pos) (0, 0) list
-        keep = if zero > one then '0' else '1'
+        keep = if predicate zero one then '1' else '0'
 
-co2Filter pos list item =
-    item !! pos == keep
-    where 
-        (zero, one) = foldl (count pos) (0, 0) list
-        keep = if zero > one then '1' else '0'
-
-
-{-
+{- |
 
 >>> toNumber [x == '1' | x <- filterUntilLast co2Filter input]
 737
+
 >>> toNumber [x == '1' | x <- filterUntilLast oxyFilter input]
 2547
 
