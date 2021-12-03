@@ -1023,13 +1023,11 @@ count pos (zero, one) num = case num !! pos of
     '0' -> (zero + 1, one)
     '1' -> (zero, one + 1)
     _   -> (zero, one)
-gammaBit (zero, one)
-    | zero > one = False
-    | otherwise  = True
 
 
+bitsAt :: Foldable t => t [Char] -> Int -> (Bool, Bool)
 bitsAt input pos  = bits $ foldl (count pos) (0, 0) input
-    where bits a = (gammaBit a, not $ gammaBit a)
+    where bits (zero, one) = (zero <= one, zero > one)
 
 
 toNumber :: Foldable t => t Bool -> Int
