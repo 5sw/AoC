@@ -1,3 +1,7 @@
+protocol PathProtocol {
+    func appending(_ room: Int, small: Bool) -> Self?
+}
+
 @main
 struct Day12: Puzzle {
     func run() {
@@ -14,11 +18,13 @@ struct Day12: Puzzle {
         let endIndex = rooms.firstIndex(of: "end")!
 
         let paths = matrix.findPaths(from: startIndex, to: endIndex, continuing: Path())
-
         print("total paths", paths.count)
+
+        let paths2 = matrix.findPaths(from: startIndex, to: endIndex, continuing: PathParth2(start: startIndex))
+        print("part 2:", paths2.count)
     }
 
-    struct Path {
+    struct Path: PathProtocol {
         var rooms: [Int] = []
 
         func appending(_ room: Int, small: Bool) -> Path? {
@@ -27,6 +33,25 @@ struct Day12: Puzzle {
             }
 
             return Path(rooms: rooms + [room])
+        }
+    }
+
+    struct PathParth2: PathProtocol {
+        let start: Int
+        var rooms: [Int] = []
+        var repeatedSmall: Bool = false
+
+        func appending(_ room: Int, small: Bool) -> PathParth2? {
+            var rs = repeatedSmall
+            if small && rooms.contains(room) {
+                if room == start || repeatedSmall {
+                    return nil
+                }
+
+                rs = true
+            }
+
+            return PathParth2(start: start, rooms: rooms + [room], repeatedSmall: rs)
         }
     }
 
@@ -40,13 +65,13 @@ struct Day12: Puzzle {
             return slice.enumerated().compactMap { $0.element ? $0.offset : nil }
         }
 
-        func findPaths(from: Int, to: Int, continuing: Path) -> [Path] {
+        func findPaths<Path: PathProtocol>(from: Int, to: Int, continuing: Path) -> [Path] {
             guard from != to else {
                 return [continuing]
             }
 
             guard let current = continuing.appending(from, small: small.contains(from)) else {
-                return  []               
+                return  []
             }
 
             return neighbors(of: from).reduce(into: []) { partialResult, next in
