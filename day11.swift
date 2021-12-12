@@ -1,5 +1,5 @@
-
-struct Day11 {
+@main
+struct Day11: Puzzle {
     mutating func run() {
         var count = 0
         var currentStep = 0
