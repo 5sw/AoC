@@ -21,8 +21,12 @@ struct Day12: Puzzle {
     struct Path {
         var rooms: [Int] = []
 
-        func appending(_ room: Int) -> Path {
-            Path(rooms: rooms + [room])
+        func appending(_ room: Int, small: Bool) -> Path? {
+            guard !small || !rooms.contains(room) else {
+                return nil
+            }
+
+            return Path(rooms: rooms + [room])
         }
     }
 
@@ -41,19 +45,13 @@ struct Day12: Puzzle {
                 return [continuing]
             }
 
-            let current = continuing.appending(from)
-            var result: [Path] = []
-
-            for next in neighbors(of: from) {
-                if small.contains(next) && current.rooms.contains(next) {
-                    continue
-                }
-
-                let nextPaths = findPaths(from: next, to: to, continuing: current)
-                result.append(contentsOf: nextPaths)
+            guard let current = continuing.appending(from, small: small.contains(from)) else {
+                return  []               
             }
 
-            return result
+            return neighbors(of: from).reduce(into: []) { partialResult, next in
+                partialResult += findPaths(from: next, to: to, continuing: current)
+            }
         }
     }
 
