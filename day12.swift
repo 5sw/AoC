@@ -20,6 +20,10 @@ struct Day12: Puzzle {
 
     struct Path {
         var rooms: [Int] = []
+
+        func appending(_ room: Int) -> Path {
+            Path(rooms: rooms + [room])
+        }
     }
 
     struct Matrix {
@@ -37,8 +41,7 @@ struct Day12: Puzzle {
                 return [continuing]
             }
 
-            var current = continuing
-            current.rooms.append(from)
+            let current = continuing.appending(from)
             var result: [Path] = []
 
             for next in neighbors(of: from) {
