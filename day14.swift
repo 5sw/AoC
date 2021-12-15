@@ -1,5 +1,5 @@
 @main
-struct Day14 {
+struct Day14: Puzzle {
     mutating func run() {
         let part1 = calculate(start, depth: 10)
         print("Part 1:", part1.values.max()! - part1.values.min()!)
