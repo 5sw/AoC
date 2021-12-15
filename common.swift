@@ -1,3 +1,5 @@
+import Foundation
+
 protocol Puzzle {
     mutating func run()
     init()
@@ -5,8 +7,15 @@ protocol Puzzle {
 
 extension Puzzle {
     static func main() {
+        let start = Date()
         var instance = Self()
         instance.run()
+        let duration = Date().timeIntervalSince(start)
+        if duration > 1 {
+            print(String(format: "Took %.2f s", duration))
+        } else {
+            print(String(format: "Took %.2f ms", 1000 * duration))
+        }
     }
 }
 
