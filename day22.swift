@@ -31,19 +31,35 @@ struct Day22: Puzzle {
         let firstY = ySteps.removeFirst()
         let firstZ = zSteps.removeFirst()
 
+        var part1 = 0
         var part2 = 0
 
         var x0 = firstX
         for x in xSteps {
             let possibleX = cubes.filter { $0.xRange.overlaps(x0..<x) }
             var y0 = firstY
+
+            let px0 = max(x0, -50)
+            let px = min(x, 50)
+
             for y in ySteps {
                 let possibleY = possibleX.filter { $0.yRange.overlaps(y0..<y) }
                 var z0 = firstZ
+
+                let py0 = max(y0, -50)
+                let py = min(y, 50)
+
                 for z in zSteps {
                     let state = possibleY.lazy.reversed().first { $0.zRange.overlaps(z0..<z) }?.state ?? false
 
                     if state {
+                        let pz0 = max(z0, -50)
+                        let pz = min(z, 50)
+
+                        if px0 < px && py0 < py && pz0 < pz {
+                            part1 += (px - px0) * (py - py0) * (pz - pz0)
+                        }
+
                         part2 += (x - x0) * (y - y0) * (z  - z0)
                     }
                     z0 = z
@@ -53,6 +69,7 @@ struct Day22: Puzzle {
             x0 = x
         }
 
+        print("Part 1:", part1)
         print("Part 2:", part2)
     }
 }
