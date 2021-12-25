@@ -3,44 +3,57 @@ import Foundation
 @main
 struct Day22: Puzzle {
     func run() {
-        var cube: [Point: Bool] = [:]
-        let activeRange = -50...50
-
         let scanner = Scanner(string: input)
+        var cubes: [Cube] = []
+
         while !scanner.isAtEnd {
-            let (command, xrange, yrange, zrange) = scanner.line()
-            if let xrange = xrange.intersection(with: activeRange) {
-                for x in xrange.clamped(to: activeRange) {
-                    if let yrange = yrange.intersection(with: activeRange) {
-                        for y in yrange.clamped(to: activeRange) {
-                            if let zrange = zrange.intersection(with: activeRange) {
-                                for z in zrange.clamped(to: activeRange) {
-                                    cube[Point(x: x, y: y, z: z)] = command
-                                }
-                            }
-                        }
+            cubes.append(scanner.cube())
+        }
+
+        var xStepsSet: Set<Int> = []
+        var yStepsSet: Set<Int> = []
+        var zStepsSet: Set<Int> = []
+
+        for cube in cubes {
+            xStepsSet.insert(cube.start.x)
+            xStepsSet.insert(cube.end.x + 1)
+            yStepsSet.insert(cube.start.y)
+            yStepsSet.insert(cube.end.y + 1)
+            zStepsSet.insert(cube.start.z)
+            zStepsSet.insert(cube.end.z + 1)
+        }
+
+        var xSteps = xStepsSet.sorted()
+        var ySteps = yStepsSet.sorted()
+        var zSteps = zStepsSet.sorted()
+
+        let firstX = xSteps.removeFirst()
+        let firstY = ySteps.removeFirst()
+        let firstZ = zSteps.removeFirst()
+
+        var part2 = 0
+
+        var x0 = firstX
+        for x in xSteps {
+            let possibleX = cubes.filter { $0.xRange.overlaps(x0..<x) }
+            var y0 = firstY
+            for y in ySteps {
+                let possibleY = possibleX.filter { $0.yRange.overlaps(y0..<y) }
+                var z0 = firstZ
+                for z in zSteps {
+                    let state = possibleY.lazy.reversed().first { $0.zRange.overlaps(z0..<z) }?.state ?? false
+
+                    if state {
+                        part2 += (x - x0) * (y - y0) * (z  - z0)
                     }
+                    z0 = z
                 }
+                y0 = y
             }
+            x0 = x
         }
 
-
-        var sum = 0
-        for x in activeRange {
-            for y in activeRange {
-                for z in activeRange {
-                    sum += cube[Point(x: x, y: y, z: z), default: false] ? 1 : 0
-                }
-            }
-        }
-        print("Part 1:", sum)
-    }
-}
-
-extension ClosedRange {
-    func intersection(with other: Self) -> Self? {
-        guard upperBound >= other.lowerBound && lowerBound <= other.upperBound else { return nil }
-        return clamped(to: other)
+        print("Part 2:", part2)
     }
 }
 
@@ -48,6 +61,20 @@ struct Point: Hashable {
     var x: Int
     var y: Int
     var z: Int
+}
+
+struct Cube {
+    var start: Point
+    var end: Point
+    var state: Bool
+
+    var xRange: ClosedRange<Int> { start.x...end.x }
+    var yRange: ClosedRange<Int> { start.y...end.y }
+    var zRange: ClosedRange<Int> { start.z...end.z }
+
+    func contains(_ point: Point) -> Bool {
+        xRange.contains(point.x) && yRange.contains(point.y) && zRange.contains(point.z)
+    }
 }
 
 extension Scanner {
@@ -83,6 +110,15 @@ extension Scanner {
         guard scanString(",z=") != nil else { fatalError() }
         let zRange = range()
         return (command, xRange, yRange, zRange)
+    }
+
+    func cube() -> Cube {
+        let (state, xrange, yrange, zrange) = line()
+        return Cube(
+            start: Point(x: xrange.lowerBound, y: yrange.lowerBound, z: zrange.lowerBound),
+            end: Point(x: xrange.upperBound, y: yrange.upperBound, z: zrange.upperBound),
+            state: state
+        )
     }
 }
 
