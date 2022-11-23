@@ -83,7 +83,7 @@
       location = "group:2016"
       name = "2016">
       <FileRef
-         location = "group:Day1.playground">
+         location = "group:AoC2016.playground">
       </FileRef>
    </Group>
    <Group
@@ -314,5 +314,90 @@
             location = "group:main.swift">
          </FileRef>
       </Group>
+   </Group>
+   <Group
+      location = "group:2021"
+      name = "2021">
+      <FileRef
+         location = "group:day17.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day15.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day5part2.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day11.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day8part2.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day13.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day14.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day1.hs">
+      </FileRef>
+      <FileRef
+         location = "group:AoC21.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:day16.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day5.hs">
+      </FileRef>
+      <FileRef
+         location = "group:day12.swift">
+      </FileRef>
+      <FileRef
+         location = "group:common.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day4.hs">
+      </FileRef>
+      <FileRef
+         location = "group:day6.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day10.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day21.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day23.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day3.hs">
+      </FileRef>
+      <FileRef
+         location = "group:day2.hs">
+      </FileRef>
+      <FileRef
+         location = "group:day18.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day25.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day22.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day20.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day9.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day24.swift">
+      </FileRef>
+      <FileRef
+         location = "group:day19.swift">
+      </FileRef>
    </Group>
 </Workspace>
