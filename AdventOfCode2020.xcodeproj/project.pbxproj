@@ -1255,7 +1255,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1300;
 				TargetAttributes = {
 					2617623E257DFD0800D00A66 = {
 						CreatedOnToolsVersion = 12.2;
@@ -1964,6 +1964,7 @@
 		26BD88A6258C818300E92A8E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1975,6 +1976,7 @@
 		26BD88A7258C818300E92A8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1986,6 +1988,7 @@
 		26DD9C42258DEAC70082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1997,6 +2000,7 @@
 		26DD9C43258DEAC70082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2008,6 +2012,7 @@
 		26DD9C75258F2CEE0082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2019,6 +2024,7 @@
 		26DD9C76258F2CEE0082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2030,6 +2036,7 @@
 		26DD9CAA2590759B0082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2041,6 +2048,7 @@
 		26DD9CAB2590759B0082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2052,6 +2060,7 @@
 		26DD9CF62591C4000082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2063,6 +2072,7 @@
 		26DD9CF72591C4000082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2074,6 +2084,7 @@
 		26DD9D2F259312410082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2085,6 +2096,7 @@
 		26DD9D30259312410082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2096,6 +2108,7 @@
 		26DD9DDD25949F600082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2107,6 +2120,7 @@
 		26DD9DDE25949F600082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2118,6 +2132,7 @@
 		26DD9E1A2595E71E0082D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2129,6 +2144,7 @@
 		26DD9E1B2595E71E0082D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 722B335UM5;
 				ENABLE_HARDENED_RUNTIME = YES;
