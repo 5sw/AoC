@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:Utils"
+      name = "Utils">
+      <FileRef
+         location = "group:Utils.swift">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2015"
+      name = "2015">
+      <FileRef
+         location = "group:2015.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Day11.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day5.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day14.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day8.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day2.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day4.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day9.playground">
+      </FileRef>
+      <Group
+         location = "group:Day7"
+         name = "Day7">
+         <FileRef
+            location = "group:Day7.xcodeproj">
+         </FileRef>
+         <Group
+            location = "group:Day7"
+            name = "Day7">
+            <FileRef
+               location = "group:main.swift">
+            </FileRef>
+         </Group>
+      </Group>
+      <FileRef
+         location = "group:Day1.playground">
+      </FileRef>
+      <Group
+         location = "group:Day6"
+         name = "Day6">
+         <FileRef
+            location = "group:Day6.xcodeproj">
+         </FileRef>
+         <Group
+            location = "group:Day6"
+            name = "Day6">
+            <FileRef
+               location = "group:main.swift">
+            </FileRef>
+         </Group>
+      </Group>
+      <FileRef
+         location = "group:Day10.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day6.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day12.playground">
+      </FileRef>
+      <FileRef
+         location = "group:Day3.playground">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2016"
+      name = "2016">
+      <FileRef
+         location = "group:Day1.playground">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2017"
+      name = "2017">
+      <FileRef
+         location = "group:Advent1.playground">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2018"
+      name = "2018">
+      <Group
+         location = "group:AoC"
+         name = "AoC">
+         <FileRef
+            location = "group:day3input.swift">
+         </FileRef>
+         <FileRef
+            location = "group:algorithms.swift">
+         </FileRef>
+         <FileRef
+            location = "group:scanner.swift">
+         </FileRef>
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:AoC.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2019"
+      name = "2019">
+      <FileRef
+         location = "group:AoC.playground">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:2020"
+      name = "2020">
+      <FileRef
+         location = "group:AdventOfCode2020.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:day4"
+         name = "day4">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day3"
+         name = "day3">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day2"
+         name = "day2">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day5"
+         name = "day5">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day23"
+         name = "day23">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day24"
+         name = "day24">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day12"
+         name = "day12">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day15"
+         name = "day15">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day14"
+         name = "day14">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day13"
+         name = "day13">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day25"
+         name = "day25">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day22"
+         name = "day22">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:common"
+         name = "common">
+         <FileRef
+            location = "group:LoadData.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Extensions.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day7"
+         name = "day7">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day9"
+         name = "day9">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day8"
+         name = "day8">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day6"
+         name = "day6">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day1"
+         name = "day1">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day18"
+         name = "day18">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day20"
+         name = "day20">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day16"
+         name = "day16">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day11"
+         name = "day11">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day10"
+         name = "day10">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day17"
+         name = "day17">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day21"
+         name = "day21">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:day19"
+         name = "day19">
+         <FileRef
+            location = "group:main.swift">
+         </FileRef>
+      </Group>
+   </Group>
+</Workspace>
