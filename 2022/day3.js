@@ -11,6 +11,19 @@ function calculate_score(input) {
     }
 }
 
+function find_badge(group) {
+    const first = group.shift();
+    const sets = group.map(item => new Set(item));
+    
+    for (const character of first) {
+        if (sets.find(item => !item.has(character)) === undefined) {
+            return character;
+        }
+    }
+    
+    throw 'No badge found';
+}
+
 async function puzzle() {
 
     const lines = readline.createInterface({
@@ -18,19 +31,30 @@ async function puzzle() {
     });
 
     var score = 0;
+    var badge_score = 0;
+    var group = [];
+    
     for await (const line of lines) {
         const mid = line.length / 2;
         const first = line.substring(0, mid);
         const second  = new Set(line.substring(mid));
-
+        
         for (const character of first) {
             if (second.has(character)) {
                 score += calculate_score(character);
                 break;
             }
         }
+
+        group.push(line);
+        if (group.length == 3) {
+            badge_score += calculate_score(find_badge(group));
+            group = [];
+        }
     }
+    
     console.log(`Part 1: Score ${score}`);
+    console.log(`Part 2: Score ${badge_score}`);
 }
 
 puzzle();
