@@ -25,13 +25,30 @@ foreach ($stackDescriptions as $line) {
     }
 }
 
-foreach ($commands as $command) {
-    preg_match('/move (\d+) from (\d+) to (\d+)/', $command, $matches);
-    [$x, $count, $from, $to] = $matches;
-    for ($i = 0; $i < $count; $i++) {
-        array_push($stacks[$to], array_pop($stacks[$from]));
+abstract class CrateMover {
+    public function __construct(protected array $stacks) {}
+    
+    protected abstract function move(int $count, string $from, string $to);
+    
+    public function run(array $commands): string {
+        foreach ($commands as $command) {
+            preg_match('/move (\d+) from (\d+) to (\d+)/', $command, $matches);
+            [$x, $count, $from, $to] = $matches;
+            $this->move((int)$count, $from, $to);
+        }
+
+        return implode('', array_map('end', $this->stacks));
     }
 }
 
-$result = implode('', array_map('end', $stacks));
+class CrateMover9000 extends CrateMover {
+    protected function move(int $count, string $from, string $to): void {
+        for ($i = 0; $i < $count; $i++) {
+            array_push($this->stacks[$to], array_pop($this->stacks[$from]));
+        }        
+    }
+}
+
+$mover = new CrateMover9000($stacks);
+$result = $mover->run($commands);
 echo 'Top crates: ' . $result;
