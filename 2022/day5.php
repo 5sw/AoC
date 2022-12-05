@@ -49,6 +49,15 @@ class CrateMover9000 extends CrateMover {
     }
 }
 
+class CrateMover9001 extends CrateMover {
+    protected function move(int $count, string $from, string $to): void {
+        $moved = array_splice($this->stacks[$from], -$count);
+        $this->stacks[$to] = array_merge($this->stacks[$to], $moved);
+    }
+}
+
 $mover = new CrateMover9000($stacks);
-$result = $mover->run($commands);
-echo 'Top crates: ' . $result;
+echo 'Part 1: Top crates: ' . $mover->run($commands) . PHP_EOL;
+
+$mover = new CrateMover9001($stacks);
+echo 'Part 2: Top crates: ' . $mover->run($commands) . PHP_EOL;
