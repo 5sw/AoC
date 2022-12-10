@@ -4,36 +4,44 @@ def moveStep(dx, dy)
   $headX += dx
   $headY += dy
   
-  dx = $headX - $tailX
-  dy = $headY - $tailY
+  (curX, curY) = [$headX, $headY]
   
-  case [dx.abs, dy.abs]
-  when [0, 0], [1, 1], [1, 0], [0, 1] then
-    
-  when [2, 0], [0, 2], [2, 2] then
-    $tailX += dx <=> 0
-    $tailY += dy <=> 0
-  when [2, 1] then
-    $tailX += dx <=> 0
-    $tailY += dy <=> 0
-  when [1, 2] then
-    $tailX += dx <=> 0
-    $tailY += dy <=> 0
-  else 
-    puts "Unknown: (#{dx}, #{dy})"
-    raise 
-  end
+  $tail.each_index { |index|
+    (tailX, tailY) = $tail[index]
 
-  $tailPositions.add [$tailX, $tailY]
+    dx = curX - tailX
+    dy = curY - tailY
+    
+    case [dx.abs, dy.abs]
+    when [0, 0], [1, 1], [1, 0], [0, 1] then
+      # Stay the same
+    when [2, 0], [0, 2], [2, 2] then
+      tailX += dx <=> 0
+      tailY += dy <=> 0
+    when [2, 1] then
+      tailX += dx <=> 0
+      tailY += dy <=> 0
+    when [1, 2] then
+      tailX += dx <=> 0
+      tailY += dy <=> 0
+    else 
+      puts "Unknown: (#{dx}, #{dy})"
+      raise 
+    end
+    
+    (curX, curY) = $tail[index] = [tailX, tailY]
+  }
+
+  $tailPositions.add [curX, curY]
 end
 
 
 def run count
   $headX = 0
   $headY = 0
-  $tailX = 0
-  $tailY = 0
 
+  $tail = [[$headX, $headY]] * (count - 1)
+  
   $tailPositions = Set[[$headX, $headY]]
 
   for line in File.readlines('day9.input') 
@@ -60,5 +68,5 @@ def run count
 end
 
 puts "Part 1: #{run(2)}"
-
+puts "Part 2: #{run(10)}"
 
