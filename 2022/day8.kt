@@ -59,6 +59,32 @@ fun Sequence<Int>.findVisibles(): Set<Int> {
     return result
 }
 
+fun Matrix.viewingDistance(x: Int, y: Int, dx: Int, dy: Int): Int {
+    var distance = 0
+    
+    var start = this[x, y]
+    
+    var cx = x + dx
+    var cy = y + dy
+    
+    while (cx in 0 until width && cy in 0 until height) {
+        distance++
+        
+        if (this[cx, cy] >= start) {
+            break
+        }    
+
+        cx += dx
+        cy += dy
+    }
+    
+    return distance
+}
+
+fun Matrix.scenicScore(x: Int, y: Int): Int =
+    viewingDistance(x, y, 1, 0) * viewingDistance(x, y, -1, 0) * viewingDistance(x, y, 0, 1) * viewingDistance(x, y, 0, -1)
+
+
 fun main() {
     val data = File("day8.input").useLines { lines -> 
         lines.toList()
@@ -80,4 +106,16 @@ fun main() {
     }
     
     println("Part 1: ${visible.count()}")
+    
+    var max = 0
+    for (x in 1 until matrix.width - 1) {
+        for (y in 1 until matrix.height - 1) {
+            var score = matrix.scenicScore(x, y)
+            if (score > max) {
+                max = score
+            }
+        }
+    }
+    
+    println("Part 2: ${max}")
 }
