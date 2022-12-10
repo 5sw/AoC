@@ -1,12 +1,5 @@
 require "set"
 
-$headX = 0
-$headY = 0
-$tailX = 0
-$tailY = 0
-
-$tailPositions = Set[[$tailX, $tailY]]
-
 def moveStep(dx, dy)
   $headX += dx
   $headY += dy
@@ -35,28 +28,37 @@ def moveStep(dx, dy)
 end
 
 
-for line in File.readlines('day9.input') 
-  unless /^(?<dir>[RLUD]) (?<steps>\d+)$/ =~ line
-    puts "Failed to parse #{line}"
-    raise
+def run count
+  $headX = 0
+  $headY = 0
+  $tailX = 0
+  $tailY = 0
+
+  $tailPositions = Set[[$headX, $headY]]
+
+  for line in File.readlines('day9.input') 
+    unless /^(?<dir>[RLUD]) (?<steps>\d+)$/ =~ line
+      puts "Failed to parse #{line}"
+      raise
+    end
+    
+    steps = steps.to_i
+    
+    case dir
+    when "R" then
+      steps.times { moveStep 1, 0 }
+    when "L" then
+      steps.times { moveStep -1, 0 }
+    when "U" then
+      steps.times { moveStep 0, 1 }
+    when "D" then
+      steps.times { moveStep 0, -1 }
+    end
   end
   
-  steps = steps.to_i
-  
-  case dir
-  when "R" then
-    steps.times { moveStep 1, 0 }
-  when "L" then
-    steps.times { moveStep -1, 0 }
-  when "U" then
-    steps.times { moveStep 0, 1 }
-  when "D" then
-    steps.times { moveStep 0, -1 }
-  else
-    raise
-  end
+  $tailPositions.count
 end
 
-puts $tailPositions.count
+puts "Part 1: #{run(2)}"
 
-    
+
