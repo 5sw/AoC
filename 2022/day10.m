@@ -15,6 +15,7 @@
     int x;
     int counter;
     int *nextSample;
+    int pixel;
 }
 
 static int samplePositions[] = {20, 60, 100, 140, 180, 220, -1};
@@ -26,6 +27,7 @@ static int samplePositions[] = {20, 60, 100, 140, 180, 220, -1};
     counter = 0;
     nextSample = samplePositions;
     _signalSum = 0;
+    pixel = 0;
     return self;
 }
 
@@ -36,6 +38,15 @@ static int samplePositions[] = {20, 60, 100, 140, 180, 220, -1};
         _signalSum += counter * x;
         ++nextSample;
     }
+    
+    printf("%c", (x - 1 <= pixel && pixel <= x + 1) ? '#' : ' ');
+    pixel++;
+    if (pixel == 40) {
+        printf("\n");
+        pixel = 0;
+    }
+    
+    
 }
 
 - (void)noop;
@@ -67,6 +78,7 @@ int main() {
             [state addX: argument];
         }
     }
+    printf("\n");
 
     NSLog(@"Part 1: %d", state.signalSum);
     
