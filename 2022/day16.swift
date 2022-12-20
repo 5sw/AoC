@@ -67,7 +67,121 @@ func findBest(path: Path, room: Room, previous: String? = nil, turnedOn: Bool, t
     return best
 }
 
-var path = Path()
-findPath(from: rooms["AA"]!, path: &path)
-print(path.rooms)
-print(path.pressure)
+//var path = Path()
+//findPath(from: rooms["AA"]!, path: &path)
+//print(path.pressure)
+
+
+struct State {
+    var me: String
+    var mePrevious: String? = nil
+    var meOpened: Bool = false
+    
+    var elephant: String
+    var elephantPrevious: String? = nil
+    var elephantOpened: Bool = false
+    
+    var timeLeft: Int
+    var pressure: Int = 0
+    var opened: Set<String> = []
+}
+
+enum Move: Hashable {
+    case openValve
+    case move(String)
+}
+
+extension State {
+    var meRoom: Room { rooms[me]! }
+    var elephantRoom: Room { rooms[elephant]! }
+    
+    func nextMoves() -> [State] {
+        let myMoves = moves(from: me, previous: mePrevious, opened: meOpened)
+        var elephantMoves = moves(from: elephant, previous: elephantPrevious, opened: elephantOpened)
+        
+        if me == elephant && myMoves.contains(.openValve) {
+           elephantMoves.remove(.openValve) 
+        }
+        
+        var result: [State] = []
+        result.reserveCapacity(myMoves.count * elephantMoves.count)
+        for a in myMoves {
+            for b in elephantMoves {
+                var next = self
+                next.move(me: a, elephant: b)
+                result.append(next)
+            }
+        }
+        
+        return result
+    }
+    
+    mutating func move(me: Move, elephant: Move) {
+        timeLeft -= 1
+        
+        switch me {
+        case .openValve:
+            opened.insert(self.me)
+            meOpened = true
+            pressure += timeLeft * meRoom.flowRate
+            
+        case .move(let to):
+            mePrevious = self.me
+            meOpened = false
+            self.me = to
+        }
+        
+        switch elephant {
+        case .openValve:
+            opened.insert(self.elephant)
+            elephantOpened = true
+            pressure += timeLeft * elephantRoom.flowRate
+            
+        case .move(let to):
+            elephantPrevious = self.elephant
+            elephantOpened = false
+            self.elephant = to
+        }
+    }
+    
+    func moves(from: String, previous: String?, opened: Bool) -> Set<Move> {
+        let room = rooms[from]!
+        var result: Set<Move> = []
+        result.reserveCapacity(room.connections.count + 1)
+        
+        if !self.opened.contains(from), room.flowRate > 0 {
+            result.insert(.openValve)
+        }
+        
+        for next in room.connections {
+            if !opened && next == previous {
+                continue
+            }
+            
+            result.insert(.move(next))
+        }
+        
+        return result
+    }
+}
+
+let initial = State(me: "AA", elephant: "AA", timeLeft: 26)
+
+let allValves = Set(rooms.values.lazy.filter { $0.flowRate > 0 }.map(\.name))
+
+var best = initial
+
+var queue = [initial]
+while !queue.isEmpty {
+    let next = queue.removeFirst()
+    if next.timeLeft == 0 || next.opened == allValves {
+        if next.pressure > best.pressure {
+            best = next
+        }
+        continue
+    }
+    
+    queue.append(contentsOf: next.nextMoves())
+}
+
+print("Part 2:", best.pressure)
