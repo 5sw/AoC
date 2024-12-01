@@ -5,183 +5,96 @@ struct Room {
     var name: String
     var flowRate: Int
     var connections: [String]
+    var index: Int = -1
 }
 
 
 let regex = #/Valve (?<room>[A-Z]{2}) has flow rate=(?<flow>\d+); tunnels? leads? to valves? (?<links>[A-Z]{2}(, [A-Z]{2})*)/#
 
-var rooms: [String: Room] = [:]
+var rooms: [String:Room] = [:]
 
 for try await line in URL(fileURLWithPath: "day16.input").lines {
     guard let match = try regex.wholeMatch(in: line) else {
         fatalError("Invalid input: \(line)")
     }
     
-    rooms[String(match.room)] = Room(name: String(match.room), flowRate: Int(match.flow)!, connections: match.links.split(separator: ", ").map(String.init))
+    rooms[String(match.room)] = (Room(name: String(match.room), flowRate: Int(match.flow)!, connections: match.links.split(separator: ", ").map(String.init)))
 }
 
 
-struct Path {
-    var rooms: [String] = []
-    var opened: Set<String> = []
-    var pressure: Int = 0
+let roomsWithValves: [String] = ["AA"] + rooms.values.lazy.filter { $0.flowRate > 0 }.map(\.name).sorted()
+for (index, name) in roomsWithValves.enumerated() {
+    rooms[name]?.index = index
 }
 
-let totalTime = 30
-
-func findPath(from room: Room, previous: String? = nil, time: Int = totalTime, path: inout Path) {
-    guard time > 0 else { return }
+struct Matrix<Element> {
+    var size: Int
+    var data: [Element]
     
-    let best = findBest(path: path, room: room, previous: previous, turnedOn: false, time: time - 1)
-
-    if time >= 2, room.flowRate > 0 && path.opened.insert(room.name).inserted {
-        path.pressure += (time - 1) * room.flowRate
-        path = findBest(path: path, room: room, previous: previous, turnedOn: true, time: time - 2)
+    init(size: Int, data: [Element]) {
+        precondition(data.count == size * size)
+        self.size = size
+        self.data = data
     }
-
-    if best.pressure > path.pressure {
-        path = best
+    
+    init(size: Int, repeating: Element) {
+        self.init(size: size, data: Array(repeating: repeating, count: size * size))
     }
-}
-
-func findBest(path: Path, room: Room, previous: String? = nil, turnedOn: Bool, time: Int) -> Path {
-    var path = path
-    path.rooms.append("\(room.name)[\(room.flowRate)]\(turnedOn ? "*" : "")")
     
-    var best = path
-    
-    for next in room.connections {
-        if !turnedOn && previous == next {
-            continue
+    subscript(x: Int, y: Int) -> Element {
+        get {
+            precondition(0 <= x && x < size && 0 <= y && y < size)
+            return data[x + size * y]
         }
-        
-        let nextRoom = rooms[next]!
-        
-        var nextPath = path
-        findPath(from: nextRoom, previous: room.name, time: time, path: &nextPath)
-        if nextPath.pressure > best.pressure {
-            best = nextPath
+        set {
+            precondition(0 <= x && x < size && 0 <= y && y < size)
+            data[x + size * y] = newValue
         }
     }
     
-    return best
-}
-
-//var path = Path()
-//findPath(from: rooms["AA"]!, path: &path)
-//print(path.pressure)
-
-
-struct State {
-    var me: String
-    var mePrevious: String? = nil
-    var meOpened: Bool = false
-    
-    var elephant: String
-    var elephantPrevious: String? = nil
-    var elephantOpened: Bool = false
-    
-    var timeLeft: Int
-    var pressure: Int = 0
-    var opened: Set<String> = []
-}
-
-enum Move: Hashable {
-    case openValve
-    case move(String)
-}
-
-extension State {
-    var meRoom: Room { rooms[me]! }
-    var elephantRoom: Room { rooms[elephant]! }
-    
-    func nextMoves() -> [State] {
-        let myMoves = moves(from: me, previous: mePrevious, opened: meOpened)
-        var elephantMoves = moves(from: elephant, previous: elephantPrevious, opened: elephantOpened)
-        
-        if me == elephant && myMoves.contains(.openValve) {
-           elephantMoves.remove(.openValve) 
-        }
-        
-        var result: [State] = []
-        result.reserveCapacity(myMoves.count * elephantMoves.count)
-        for a in myMoves {
-            for b in elephantMoves {
-                var next = self
-                next.move(me: a, elephant: b)
-                result.append(next)
-            }
-        }
-        
-        return result
-    }
-    
-    mutating func move(me: Move, elephant: Move) {
-        timeLeft -= 1
-        
-        switch me {
-        case .openValve:
-            opened.insert(self.me)
-            meOpened = true
-            pressure += timeLeft * meRoom.flowRate
-            
-        case .move(let to):
-            mePrevious = self.me
-            meOpened = false
-            self.me = to
-        }
-        
-        switch elephant {
-        case .openValve:
-            opened.insert(self.elephant)
-            elephantOpened = true
-            pressure += timeLeft * elephantRoom.flowRate
-            
-        case .move(let to):
-            elephantPrevious = self.elephant
-            elephantOpened = false
-            self.elephant = to
+    mutating func setDiagonal(to value: Element) {
+        for i in 0..<size {
+            self[i, i] = value
         }
     }
+}
+
+
+var distanceMatrix = Matrix(size: roomsWithValves.count, repeating: Int.max)
+distanceMatrix.setDiagonal(to: 0)
+
+func findDistances(start: String, current: String, previous: String? = nil, distance: Int = 0) {
     
-    func moves(from: String, previous: String?, opened: Bool) -> Set<Move> {
-        let room = rooms[from]!
-        var result: Set<Move> = []
-        result.reserveCapacity(room.connections.count + 1)
-        
-        if !self.opened.contains(from), room.flowRate > 0 {
-            result.insert(.openValve)
-        }
-        
-        for next in room.connections {
-            if !opened && next == previous {
-                continue
-            }
-            
-            result.insert(.move(next))
-        }
-        
-        return result
+    let currentRoom = rooms[current]!
+    let startRoom = rooms[start]!
+    
+    let nextStart = currentRoom.flowRate > 0 ? current : start
+    if currentRoom.flowRate > 0 {
+        distanceMatrix[startRoom.index, currentRoom.index] = min(distanceMatrix[startRoom.index, currentRoom.index], distance)
+    }
+    
+    for next in currentRoom.connections where next != previous {
+        findDistances(start: nextStart, current: next, previous: current, distance: distance + 1)
     }
 }
 
-let initial = State(me: "AA", elephant: "AA", timeLeft: 26)
+findDistances(start: "AA", current: "AA")
 
-let allValves = Set(rooms.values.lazy.filter { $0.flowRate > 0 }.map(\.name))
-
-var best = initial
-
-var queue = [initial]
-while !queue.isEmpty {
-    let next = queue.removeFirst()
-    if next.timeLeft == 0 || next.opened == allValves {
-        if next.pressure > best.pressure {
-            best = next
+print("   ", terminator: "")
+for name in roomsWithValves {
+    print("| \(name)  ", terminator: "")
+}
+print("|")
+for y in 0..<distanceMatrix.size {
+    print(roomsWithValves[y], "", terminator: "")
+    for x in 0..<distanceMatrix.size {
+        let value = distanceMatrix[x, y]
+        if value == .max {
+            print("|     ", terminator: "")
+        } else {
+            print(String(format: "| %2d  ", value), terminator: "")        
         }
-        continue
     }
-    
-    queue.append(contentsOf: next.nextMoves())
+    print("|")
 }
 
-print("Part 2:", best.pressure)
