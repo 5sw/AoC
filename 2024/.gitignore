@@ -1,0 +1,6 @@
+### IntelliJ IDEA ###
+out/
+!**/src/main/**/out/
+
+### Mac OS ###
+.DS_Store
