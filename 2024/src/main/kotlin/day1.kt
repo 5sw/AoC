@@ -1,10 +1,7 @@
 import kotlin.math.abs
 
 fun main() {
-    val input = object {}.javaClass.getResourceAsStream("day1.txt")
-        ?.bufferedReader()
-        ?.lineSequence()
-        ?: error("Cannot read input")
+    val input = readInput("day1.txt")
 
     val a = mutableListOf<Int>()
     val b = mutableListOf<Int>()
