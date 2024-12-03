@@ -28,6 +28,6 @@ private fun isSafe(report: List<Int>): Boolean {
 
     return report.fold(State()) { state, next ->
         state.update(next)
-            .also { if (!it.safe) return@fold it }
+            .also { if (!it.safe) return@isSafe false }
     }.safe
 }
