@@ -13,22 +13,20 @@ class Grid(val rows: List<String>) {
     fun chars(x: Int, y: Int, dx: Int, dy: Int) = Line(x, y, dx, dy)
 
     inner class Line(val x: Int, val y: Int, val dx: Int, val dy: Int) : Sequence<Char> {
-        override fun iterator(): Iterator<Char> = iterator {
-            if (dx == 1 && dy == 0) {
-                yieldAll(rows[y].substring(startIndex = x).asSequence())
-            } else {
+        override fun iterator(): Iterator<Char> = if (dx == 1 && dy == 0) {
+            rows[y].substring(startIndex = x).iterator()
+        } else iterator {
+            var x = x
+            var y = y
 
-                var x = x
-                var y = y
-
-                while (x in 0..<width && y in 0..<height) {
-                    yield(get(x, y))
-                    x += dx
-                    y += dy
-                }
+            while (x in 0..<width && y in 0..<height) {
+                yield(get(x, y))
+                x += dx
+                y += dy
             }
         }
     }
+
 
     fun rows(): Sequence<Line> = sequence {
         for (y in 0..<height) {
