@@ -61,4 +61,19 @@ class Grid(val rows: List<String>) {
 
     fun get(x: Int, y: Int): Char = rows[y][x]
 
+    fun find(char: Char): Coordinate? {
+        for (y in rows.indices) {
+            val index = rows[y].indexOf(char)
+            if (index != -1) {
+                return Coordinate(index, y)
+            }
+        }
+        return null
+    }
+
+    fun inside(coordinate: Coordinate) = coordinate.x in 0..<width && coordinate.y in 0..<height
+
+    operator fun get(coordinate: Coordinate) = get(coordinate.x, coordinate.y)
+
+    data class Coordinate(val x: Int, val y: Int)
 }
