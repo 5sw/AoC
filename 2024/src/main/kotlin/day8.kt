@@ -17,7 +17,7 @@ fun main() {
             val dy = antenna.y - coordinate.y
             val secondAntenna = Grid.Coordinate(antenna.x + dx, antenna.y + dy)
 
-            secondAntenna != antenna && grid.inside(secondAntenna) && grid.get(secondAntenna) == frequency
+            secondAntenna != antenna && grid.inside(secondAntenna) && grid[secondAntenna] == frequency
         }
 
     fun isAntinode(coordinate: Grid.Coordinate) =
