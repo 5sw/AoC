@@ -39,4 +39,36 @@ fun main() {
     }
 
     println("Part 1: ${antinodes.count()}")
+
+    antinodes.clear()
+
+    for (positions in antennasByFrequency.values) {
+        for ((first, second) in pairs(positions)) {
+            val dx = second.x - first.x
+            val dy = second.y - first.y
+
+            var pos = first
+            while (grid.inside(pos)) {
+                antinodes.add(pos)
+                pos = Grid.Coordinate(pos.x + dx, pos.y + dy)
+            }
+
+            pos = first
+            while (grid.inside(pos)) {
+                antinodes.add(pos)
+                pos = Grid.Coordinate(pos.x - dx, pos.y - dy)
+            }
+        }
+    }
+
+    println("Part 2: ${antinodes.count()}")
+}
+
+
+fun <T> pairs(list: List<T>) = sequence {
+    for (i in list.indices) {
+        for (j in 0..<i) {
+            yield(list[i] to list[j])
+        }
+    }
 }
