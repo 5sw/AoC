@@ -1,36 +1,36 @@
 fun main() {
-    val grid = Grid.read("day8.txt")
+    val grid = CharGrid.read("day8.txt")
 
-    val antennasByFrequency = mutableMapOf<Char, MutableList<Grid.Coordinate>>()
+    val antennasByFrequency = mutableMapOf<Char, MutableList<CharGrid.Coordinate>>()
     for (y in 0..<grid.height) {
         for (x in 0..<grid.width) {
             val value = grid.get(x, y)
             if (value != '.') {
-                antennasByFrequency.getOrPut(value) { mutableListOf() }.add(Grid.Coordinate(x, y))
+                antennasByFrequency.getOrPut(value) { mutableListOf() }.add(CharGrid.Coordinate(x, y))
             }
         }
     }
 
-    fun isAntinode(coordinate: Grid.Coordinate, frequency: Char, antennas: List<Grid.Coordinate>) =
+    fun isAntinode(coordinate: CharGrid.Coordinate, frequency: Char, antennas: List<CharGrid.Coordinate>) =
         antennas.any { antenna ->
             val dx = antenna.x - coordinate.x
             val dy = antenna.y - coordinate.y
-            val secondAntenna = Grid.Coordinate(antenna.x + dx, antenna.y + dy)
+            val secondAntenna = CharGrid.Coordinate(antenna.x + dx, antenna.y + dy)
 
             secondAntenna != antenna && grid.inside(secondAntenna) && grid[secondAntenna] == frequency
         }
 
-    fun isAntinode(coordinate: Grid.Coordinate) =
+    fun isAntinode(coordinate: CharGrid.Coordinate) =
         antennasByFrequency.any { (frequency, positions) ->
             isAntinode(coordinate, frequency, positions)
         }
 
-    val antinodes = mutableSetOf<Grid.Coordinate>()
+    val antinodes = mutableSetOf<CharGrid.Coordinate>()
 
     for (y in 0..<grid.height) {
         for (x in 0..<grid.width) {
 
-            val coordinate = Grid.Coordinate(x, y)
+            val coordinate = CharGrid.Coordinate(x, y)
             if (isAntinode(coordinate)) {
                 antinodes.add(coordinate)
             }
@@ -50,13 +50,13 @@ fun main() {
             var pos = first
             while (grid.inside(pos)) {
                 antinodes.add(pos)
-                pos = Grid.Coordinate(pos.x + dx, pos.y + dy)
+                pos = CharGrid.Coordinate(pos.x + dx, pos.y + dy)
             }
 
             pos = first
             while (grid.inside(pos)) {
                 antinodes.add(pos)
-                pos = Grid.Coordinate(pos.x - dx, pos.y - dy)
+                pos = CharGrid.Coordinate(pos.x - dx, pos.y - dy)
             }
         }
     }

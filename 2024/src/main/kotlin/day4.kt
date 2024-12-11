@@ -1,5 +1,5 @@
 fun main() {
-    val grid = Grid.read("day4.txt")
+    val grid = CharGrid.read("day4.txt")
 
     val part1 = grid.all().fold(0) { acc, line ->
         val string = line.joinToString(separator = "")
@@ -18,7 +18,7 @@ fun main() {
 
 }
 
-fun Grid.xmasAt(x: Int, y: Int): Boolean {
+fun CharGrid.xmasAt(x: Int, y: Int): Boolean {
     assert(get(x, y) == 'A')
 
     val tl = get(x - 1, y - 1)

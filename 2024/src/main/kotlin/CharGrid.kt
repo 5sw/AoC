@@ -1,4 +1,4 @@
-class Grid(val rows: List<String>) {
+class CharGrid(val rows: List<String>) {
     val width = rows.firstOrNull()?.count() ?: 0
     val height get() = rows.count()
 
@@ -7,7 +7,7 @@ class Grid(val rows: List<String>) {
     }
 
     companion object {
-        fun read(name: String): Grid = Grid(readInput(name).toList())
+        fun read(name: String): CharGrid = CharGrid(readInput(name).toList())
     }
 
     fun chars(x: Int, y: Int, dx: Int, dy: Int) = Line(x, y, dx, dy)
