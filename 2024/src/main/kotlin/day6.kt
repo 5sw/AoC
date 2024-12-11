@@ -12,7 +12,7 @@ enum class Direction {
     }
 }
 
-fun CharGrid.Coordinate.step(direction: Direction) =
+fun Grid.Coordinate.step(direction: Direction) =
     when (direction) {
         Direction.North -> copy(y = y - 1)
         Direction.East -> copy(x = x + 1)
@@ -25,7 +25,7 @@ fun main() {
 
     var position = grid.find('^') ?: error("Guard not found")
     var direction = Direction.North
-    val visitedPositions = mutableSetOf<CharGrid.Coordinate>()
+    val visitedPositions = mutableSetOf<Grid.Coordinate>()
 
     while (true) {
         visitedPositions.add(position)

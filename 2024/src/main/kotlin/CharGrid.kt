@@ -1,6 +1,6 @@
-class CharGrid(val rows: List<String>) {
-    val width = rows.firstOrNull()?.count() ?: 0
-    val height get() = rows.count()
+class CharGrid(val rows: List<String>) : Grid<Char> {
+    override val width = rows.firstOrNull()?.count() ?: 0
+    override val height get() = rows.count()
 
     init {
         assert(rows.all { it.length == width })
@@ -59,21 +59,20 @@ class CharGrid(val rows: List<String>) {
         yieldAll(diagonals())
     }
 
-    fun get(x: Int, y: Int): Char = rows[y][x]
+    override fun get(x: Int, y: Int): Char = rows[y][x]
 
-    fun find(char: Char): Coordinate? {
+    fun find(char: Char): Grid.Coordinate? {
         for (y in rows.indices) {
             val index = rows[y].indexOf(char)
             if (index != -1) {
-                return Coordinate(index, y)
+                return Grid.Coordinate(index, y)
             }
         }
         return null
     }
 
-    fun inside(coordinate: Coordinate) = coordinate.x in 0..<width && coordinate.y in 0..<height
-
-    operator fun get(coordinate: Coordinate) = get(coordinate.x, coordinate.y)
-
-    data class Coordinate(val x: Int, val y: Int)
+    override fun <T> map(fn: (Char) -> T): Grid<T> {
+        val data = rows.flatMap { it.map(fn) }
+        return ListGrid(width, height, data)
+    }
 }
