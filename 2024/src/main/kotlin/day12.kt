@@ -1,21 +1,19 @@
 fun main() {
-
     var part1 = 0
     var part2 = 0
+
     while (all.isNotEmpty()) {
         val start = all.elementAt(0)
         val (area, fenceLength, fenceSides) = input.floodFill(start)
         part1 += area * fenceLength
         part2 += area * fenceSides
-
-        println("$area x $fenceSides")
     }
 
     println("Part 1: $part1")
     println("Part 2: $part2")
 }
 
-val input = CharGrid.read("day12-sample.txt")
+val input = CharGrid.read("day12.txt")
 val all = sequence {
     for (y in 0..<input.height) {
         for (x in 0..<input.width) {
@@ -32,33 +30,29 @@ fun CharGrid.floodFill(start: Grid.Coordinate): Triple<Int, Int, Int> {
 
     all.removeAll(visited)
 
-    println(fence.horizontalSides.flatMap { it.value.sides.values.toSet().map { side -> it.key to side} })
-    println(fence.verticalSides.flatMap { it.value.sides.values.toSet().map { side -> it.key to side} })
-
     return Triple(visited.count(), fence.length, fence.sides)
 }
 
 class Fence {
-    var length = 0
+    val horizontalSides = mutableMapOf<Int, SideList>()
+    val verticalSides = mutableMapOf<Int, SideList>()
+    val length
+        get() = horizontalSides.values.sumOf { it.length } +
+                verticalSides.values.sumOf { it.length }
+
     val sides
-        get() = horizontalSides.values.fold(0) { acc, sides -> acc + sides.count } +
-                verticalSides.values.fold(0) { acc, sides -> acc + sides.count }
+        get() = horizontalSides.values.sumOf { it.count } +
+                verticalSides.values.sumOf { it.count }
 
-    fun add(coordinate: Grid.Coordinate, horizontal: Boolean) {
-        length += 1
-
+    fun add(coordinate: Grid.Coordinate, horizontal: Boolean, first: Boolean) {
         if (horizontal) {
-            horizontalSides.getOrPut(coordinate.y) { SideList() }.add(coordinate.x)
+            horizontalSides.getOrPut(coordinate.y) { SideList() }.add(coordinate.x, first)
         } else {
-            verticalSides.getOrPut(coordinate.x) { SideList() }.add(coordinate.y)
+            verticalSides.getOrPut(coordinate.x) { SideList() }.add(coordinate.y, first)
         }
     }
 
-
-    val horizontalSides = mutableMapOf<Int, SideList>()
-    val verticalSides = mutableMapOf<Int, SideList>()
-
-    data class Side(val start: Int, val end: Int = start) {
+    data class Side(val first: Boolean, val start: Int, val end: Int = start) {
         init {
             require(start <= end)
         }
@@ -67,31 +61,33 @@ class Fence {
     }
 
     class SideList {
-        val sides = mutableMapOf<Int, Side>()
-        val count: Int get() = sides.values.toSet().count()
+        val sidesByPosition = mutableMapOf<Int, Side>()
+        val sides: Set<Side> get() = sidesByPosition.values.toSet()
+        val count: Int get() = sides.count()
+        val length: Int get() = sides.sumOf { it.length }
 
-        fun add(position: Int) {
-            if (sides.containsKey(position)) return
+        fun add(position: Int, first: Boolean) {
+            if (sidesByPosition.containsKey(position)) return
 
-            val before = sides[position - 1]
-            val after = sides[position + 1]
+            val before = sidesByPosition[position - 1]?.takeIf { it.first == first }
+            val after = sidesByPosition[position + 1]?.takeIf { it.first == first }
 
             val newSide = when {
-                before != null && after != null -> Side(before.start, after.end)
-                before != null -> Side(before.start, position)
-                after != null -> Side(position, after.end)
-                else -> Side(position)
+                before != null && after != null -> Side(first, before.start, after.end)
+                before != null -> Side(first, before.start, position)
+                after != null -> Side(first, position, after.end)
+                else -> Side(first, position)
             }
 
             assert(before == null || newSide.start == before.start)
-            assert(after == null ||newSide.end == after.end)
+            assert(after == null || newSide.end == after.end)
             assert(position in newSide.start..newSide.end)
 
             for (pos in newSide.start..newSide.end) {
-                sides[pos] = newSide
+                sidesByPosition[pos] = newSide
             }
 
-            assert(sides[position] === newSide)
+            assert(sidesByPosition[position] === newSide)
         }
     }
 
@@ -108,7 +104,9 @@ fun CharGrid.floodFill(start: Grid.Coordinate, type: Char, visited: MutableSet<G
         }
 
         if (!inside(neighbor) || this[neighbor] != type) {
-            fence.add(neighbor, direction == Direction.North || direction == Direction.South)
+            val first = direction == Direction.North || direction == Direction.West
+            val fencePosition = if (first) neighbor else start
+            fence.add(fencePosition, direction == Direction.North || direction == Direction.South, first)
         }
     }
 }
