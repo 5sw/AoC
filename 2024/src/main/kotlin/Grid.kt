@@ -16,6 +16,14 @@ operator fun <T> Grid<T>.set(coordinate: Grid.Coordinate, value: T) = set(coordi
 operator fun <T> Grid<T>.get(coordinate: Grid.Coordinate) = get(coordinate.x, coordinate.y)
 operator fun <T> Grid<T>.contains(coordinate: Grid.Coordinate) = inside(coordinate)
 
+fun <T> Grid<T>.coordinates() = sequence {
+    for (y in 0..<height) {
+        for (x in 0..<width) {
+            yield(Grid.Coordinate(x, y))
+        }
+    }
+}
+
 class ListGrid<T>(override val width: Int, override val height: Int,  content: List<T>) : Grid<T> {
     init {
         assert(width * height == content.count())
