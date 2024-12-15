@@ -36,6 +36,21 @@ fun main() {
     }
     val part1 = topLeft * topRight * bottomLeft * bottomRight
     println("Part 1: $part1")
+
+    var time = 0
+    while (time < 100) {
+        val grid = CharGrid(WIDTH, HEIGHT, '.')
+        for (robot in initial) {
+            val pos = robot.move(time).position
+            grid[pos] = '#'
+        }
+
+        println("t = $time")
+        println(grid.rows.joinToString(separator = "\n"));
+        println()
+
+        ++time
+    }
 }
 
 private const val WIDTH = 101
