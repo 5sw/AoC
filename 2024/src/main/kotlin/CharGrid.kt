@@ -1,6 +1,10 @@
-class CharGrid(val rows: List<String>) : Grid<Char> {
+class CharGrid(rows: List<String>) : Grid<Char> {
+    val rows = rows.toMutableList()
     override val width = rows.firstOrNull()?.count() ?: 0
     override val height get() = rows.count()
+
+    constructor(width: Int, height: Int, char: Char)
+            : this((1..height).map { char.toString().repeat(width) })
 
     init {
         assert(rows.all { it.length == width })
@@ -74,5 +78,9 @@ class CharGrid(val rows: List<String>) : Grid<Char> {
     override fun <T> map(fn: (Char) -> T): Grid<T> {
         val data = rows.flatMap { it.map(fn) }
         return ListGrid(width, height, data)
+    }
+
+    override fun set(x: Int, y: Int, value: Char) {
+        rows[y] = rows[y].replaceRange(x, x + 1, value.toString())
     }
 }
