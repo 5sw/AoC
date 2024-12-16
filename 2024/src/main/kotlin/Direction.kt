@@ -12,10 +12,10 @@ enum class Direction {
     }
 }
 
-fun Grid.Coordinate.step(direction: Direction) =
+fun Grid.Coordinate.step(direction: Direction, steps: Int = 1) =
     when (direction) {
-        Direction.North -> copy(y = y - 1)
-        Direction.East -> copy(x = x + 1)
-        Direction.South -> copy(y = y + 1)
-        Direction.West -> copy(x = x - 1)
+        Direction.North -> copy(y = y - steps)
+        Direction.East -> copy(x = x + steps)
+        Direction.South -> copy(y = y + steps)
+        Direction.West -> copy(x = x - steps)
     }
