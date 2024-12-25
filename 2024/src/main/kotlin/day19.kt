@@ -5,17 +5,22 @@ fun main() {
         .flatMap { it.split(",\\s*".toRegex()) }
         .toList()
 
-    val part1 = Sequence { iterator }.count { isPossible(it, towels) }
+    val patterns = Sequence { iterator }.toList()
+
+    val part1 = patterns.count { waysToMake(it, towels) > 0 }
     println("Part 1: $part1")
+
+    val part2 = patterns.sumOf { waysToMake(it, towels) }
+    println("Part 2: $part2")
 }
 
-private val patternMemo = mutableMapOf<String, Boolean>()
+private val patternMemo = mutableMapOf<String, Long>()
 
-fun isPossible(pattern: String, towels: List<String>): Boolean {
-    if (pattern.isEmpty()) return true
+fun waysToMake(pattern: String, towels: List<String>): Long {
+    if (pattern.isEmpty()) return 1
     return patternMemo.getOrPut(pattern) {
         towels
             .filter { pattern.startsWith(it) }
-            .any { isPossible(pattern.substring(it.length), towels) }
+            .fold(0) { acc, towel -> acc + waysToMake(pattern.substring(towel.length), towels) }
     }
 }
