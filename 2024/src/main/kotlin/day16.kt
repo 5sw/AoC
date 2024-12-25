@@ -1,5 +1,3 @@
-import java.util.PriorityQueue
-
 data class Position(val coordinate: Grid.Coordinate, val direction: Direction)
 
 fun main() {

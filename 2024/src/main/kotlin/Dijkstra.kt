@@ -16,7 +16,7 @@ fun <T> dijkstra(start: T, goal: (T) -> Boolean, neighbors: (T) -> Sequence<Pair
         visited.add(start)
 
         for ((neighbor, distance) in neighbors(current)) {
-            if (neighbor in visited) continue;
+            if (neighbor in visited) continue
 
             val newDistance = totalDistance + distance
 
