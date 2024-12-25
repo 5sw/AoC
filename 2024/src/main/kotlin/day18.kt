@@ -22,4 +22,28 @@ fun main() {
             .map { it to 1 }
     })
     println("Part 1: $distance")
+
+
+    val input = readInput("day18.txt")
+        .map {
+            val (a, b) = it.split(',', limit = 2)
+            Grid.Coordinate(a.toInt(), b.toInt())
+        }
+
+    val mem = CharGrid(size, size, '.')
+    for (location in input) {
+        mem[location] = '#'
+
+        val isStopped = dijkstra(start, goal = { it == goal }, neighbors = { pos ->
+            Direction.entries.asSequence()
+                .map { pos.step(it) }
+                .filter { it in mem && mem[it] == '.' }
+                .map { it to 1 }
+        }) == null
+
+        if (isStopped) {
+            println("Part 2: ${location.x},${location.y}")
+            break
+        }
+    }
 }
