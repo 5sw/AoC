@@ -19,3 +19,8 @@ fun Grid.Coordinate.step(direction: Direction, steps: Int = 1) =
         Direction.South -> copy(y = y + steps)
         Direction.West -> copy(x = x - steps)
     }
+
+fun Grid.Coordinate.neighbors(distance: Int = 1): Sequence<Grid.Coordinate> =
+    Direction.entries
+        .asSequence()
+        .map { step(it, distance) }
