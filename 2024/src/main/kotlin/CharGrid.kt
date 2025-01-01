@@ -6,6 +6,8 @@ class CharGrid(rows: List<String>) : Grid<Char> {
     constructor(width: Int, height: Int, char: Char)
             : this((1..height).map { char.toString().repeat(width) })
 
+    constructor(vararg rows: String) : this(rows.toList())
+
     init {
         assert(rows.all { it.length == width })
     }
