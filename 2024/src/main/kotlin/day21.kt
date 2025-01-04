@@ -19,16 +19,31 @@ fun main() {
         "<v>"
     )
 
-    println(keySequence("029A", numberPad))
-    println(keySequence(keySequence("029A", numberPad), robotPad))
-    Integer.parseInt()
-    println("029A".toInt())
+    val tests = listOf(
+        "029A",
+        "980A",
+        "179A",
+        "456A",
+        "379A",
+    )
 
+
+    val part1 = inputs.fold(0) { acc, s ->
+        val robot1 = keySequence(s, numberPad)
+        val robot2 = keySequence(robot1, robotPad)
+        val type = keySequence(robot2, robotPad)
+
+        val numeric = s.dropLast(1).toInt()
+
+        acc + type.length * numeric
+    }
+
+    println("Part 1: $part1")
 }
 
 fun keySequence(code: String, pad: CharGrid, start: Char = 'A'): String {
     var position = pad.find(start) ?: error("Start position not found")
-    val gap = pad.find(' ') ?: error("Gap not found")
+    val gap = pad.find(' ')
 
     val result = StringBuilder()
     for (current in code) {
@@ -37,7 +52,7 @@ fun keySequence(code: String, pad: CharGrid, start: Char = 'A'): String {
         val dx = target.x - position.x
         val dy = target.y - position.y
 
-        if (target.y < gap.y) {
+        if (position.y == gap?.y) {
             result.appendMovement(dy, '^', 'v')
             result.appendMovement(dx, '<', '>')
         } else {
